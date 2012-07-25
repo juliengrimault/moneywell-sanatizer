@@ -2,6 +2,7 @@
 
 require 'csv'
 # http://ruby-doc.org/stdlib-1.9.2/libdoc/csv/rdoc/CSV.html
+require 'dbs_code_map.rb'
 
 def remove_non_standart_lines(array_of_arrays)
   #The begining of the csv file is not standart, it is something like below
@@ -20,8 +21,40 @@ def remove_non_standart_lines(array_of_arrays)
   # we remove the line  0 to 4 and 6
   result = array_of_arrays.drop(5)
   result.delete_at(1)
+
+  #clean trailing empty value
+  header_count = result[0].count
+  result.each do |row|
+    while row.count > header_count
+      row.pop
+    end
+  end
   result
 end
+
+def expand_transaction_codes(array_of_arrays)
+  array_of_arrays[0] << "Code Explanation"
+  i = 0
+  array_of_arrays.each do |row|
+    if i == 0 #skip headers
+      i += 1
+      next
+    end
+
+    transaction_reference = row[1]
+    reference_explanation = nil
+    unless transaction_reference.nil?
+      reference_explanation = CODE_MAP[transaction_reference]
+      if reference_explanation.nil?
+        puts "Transaction Reference #{transaction_reference} not found in Code Map. Line #{i}"
+      end
+    end
+    row << reference_explanation
+    i += 1
+  end
+  array_of_arrays
+end
+
 
 def print_csv(array_of_arrays)
   i = 0
@@ -49,4 +82,5 @@ csv_file = ARGV[0]
 array_of_arrays = CSV.read(csv_file)
 puts "Removing the line  0 to 4 and 6"
 array_of_arrays =  remove_non_standart_lines(array_of_arrays)
+array_of_arrays = expand_transaction_codes(array_of_arrays)
 write_to_file(array_of_arrays)
