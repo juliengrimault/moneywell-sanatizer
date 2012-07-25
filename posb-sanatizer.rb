@@ -32,7 +32,25 @@ def remove_non_standart_lines(array_of_arrays)
   result
 end
 
-def expand_transaction_codes(array_of_arrays)
+def expand_transaction_code(row, line_number)
+  transaction_reference = row[1]
+    reference_explanation = nil
+    unless transaction_reference.nil?
+      reference_explanation = CODE_MAP[transaction_reference]
+      if reference_explanation.nil?
+        puts "Transaction Reference #{transaction_reference} not found in Code Map. Line #{line_number}"
+      end
+    end
+  row << reference_explanation
+end
+
+def fix_empty_transaction_reference_1(row)
+  if row[4].nil?
+    row[4] = "-"
+  end
+end
+
+def fix_rows(array_of_arrays)
   array_of_arrays[0] << "Code Explanation"
   i = 0
   array_of_arrays.each do |row|
@@ -41,15 +59,8 @@ def expand_transaction_codes(array_of_arrays)
       next
     end
 
-    transaction_reference = row[1]
-    reference_explanation = nil
-    unless transaction_reference.nil?
-      reference_explanation = CODE_MAP[transaction_reference]
-      if reference_explanation.nil?
-        puts "Transaction Reference #{transaction_reference} not found in Code Map. Line #{i}"
-      end
-    end
-    row << reference_explanation
+    expand_transaction_code(row,i)
+    fix_empty_transaction_reference_1(row)
     i += 1
   end
   array_of_arrays
@@ -82,5 +93,5 @@ csv_file = ARGV[0]
 array_of_arrays = CSV.read(csv_file)
 puts "Removing the line  0 to 4 and 6"
 array_of_arrays =  remove_non_standart_lines(array_of_arrays)
-array_of_arrays = expand_transaction_codes(array_of_arrays)
+array_of_arrays = fix_rows(array_of_arrays)
 write_to_file(array_of_arrays)
