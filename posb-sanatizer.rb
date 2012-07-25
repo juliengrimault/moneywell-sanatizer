@@ -75,14 +75,20 @@ def print_csv(array_of_arrays)
   end
 end
 
-def write_to_file(array_of_arrays)
-  CSV.open("csvfile_out.csv", "wb") do |csv|
+def write_to_file(array_of_arrays, output_filename)
+  CSV.open(output_filename, "wb") do |csv|
     array_of_arrays.each do |row|
       csv << row
     end
   end
 end
 
+def output_filename(input_filename)
+  extension = File.extname(input_filename)
+  basename = File.basename(input_filename,extension)
+  dirname = File.dirname(input_filename)
+  return "#{dirname}/#{basename}_sanatized#{extension}"
+end
 
 if ARGV.length < 1
   puts "Usage: posb-sanatizer.rb csv_file"
@@ -94,4 +100,5 @@ array_of_arrays = CSV.read(csv_file)
 puts "Removing the line  0 to 4 and 6"
 array_of_arrays =  remove_non_standart_lines(array_of_arrays)
 array_of_arrays = fix_rows(array_of_arrays)
-write_to_file(array_of_arrays)
+write_to_file(array_of_arrays,output_filename(ARGV[0]))
+
