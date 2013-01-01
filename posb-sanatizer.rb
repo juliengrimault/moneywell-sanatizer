@@ -17,19 +17,20 @@ module MoneyWellSanatizer
     def remove_non_standart_lines(array_of_arrays)
       #The begining of the csv file is not standart, it is something like below
 
-      #0 - Account Details For:POSB Savings 010-81630-0
-      #1 - Statement as at:25 Jul 2012
-      #2 - Available Balance:2272.14
-      #3 - Ledger Balance:2356.60
-      #4 - 
-      #5 - Transaction DateReferenceDebit AmountCredit AmountTransaction Ref1Transaction Ref2Transaction Ref3
-      #6 - 
-      #7 - 25 Jul 2012UMC- XX.XX YYYY    MO RE 20JUL5264-7100-0209-5267 EUR20.40
-      #8 - 22 Jul 2012UMC-S XXXX.XX YYYYY              SI NG 19JUL5264-7100-0209-5267
+      #0 - 
+      #1 - Account Details For:POSB Savings 010-81630-0
+      #2 - Statement as at:25 Jul 2012
+      #3 - Available Balance:2272.14
+      #4 - Ledger Balance:2356.60
+      #5 - 
+      #6 - Transaction Date,Reference,Debit Amount,Credit Amount,Transaction Ref1,Transaction Ref2,Transaction Ref3
+      #7 - 
+      #8 - 25 Jul 2012,UMC- ,XX.XX,YYYY,    MO RE 20JUL5264-7100-0209-5267 EUR20.40
+      #9 - 22 Jul 2012UMC-S XXXX.XX YYYYY              SI NG 19JUL5264-7100-0209-5267
       #     and so on for the transactions...
 
-      # we remove the line  0 to 4 and 6
-      result = array_of_arrays.drop(5)
+      # we remove the line  0 to 5 and 7
+      result = array_of_arrays.drop(6)
       result.delete_at(1)
 
       #clean trailing empty value
