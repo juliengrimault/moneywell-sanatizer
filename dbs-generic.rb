@@ -12,15 +12,15 @@ module MoneyWellSanatizer
 
     attr_accessor :csv_file, :sanatized #both are array of arrays
     attr_accessor :indexes_to_delete
+
     def initialize(csv_file, indexes_to_delete)
       @csv_file = csv_file
       @indexes_to_delete = indexes_to_delete
     end
 
     def remove_non_standart_lines(array_of_arrays)
-
       result = []
-      array_of_arrays.each_index |i| do
+      array_of_arrays.each_index do |i|
         result << array_of_arrays[i] unless indexes_to_delete.include?(i)
       end
 

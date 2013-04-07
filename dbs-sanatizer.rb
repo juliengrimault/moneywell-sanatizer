@@ -4,7 +4,7 @@ require 'csv'
 # http://ruby-doc.org/stdlib-1.9.2/libdoc/csv/rdoc/CSV.html
 require 'utils'
 require 'dbs_code_map.rb'
-require 'db-generic.rb'
+require 'dbs-generic.rb'
 
 
 #The begining of the csv file is not standart, it is something like below
